@@ -1,34 +1,43 @@
 # Sucurius
 
+#Introdução
+
 ## EBNF
 ```
-letra = "A" | "B" | "C" | "D" | "E" | "F" | "G"
+program: { statement };
+
+statement: (assignment | print | if_else | while | commands | funcdef | funccall) "\n";
+
+funcdef: "func" identificador "(" { parameters } ")" "{" {statement} "}";
+
+parameters: ("," expression);
+
+funccall: identificador "(" { parameters } ")";
+
+assignment: identificador "=" expression;
+
+print: "imprime" "(" expression ")";
+
+if_else: "se" "(" rel_exp ")" "{" {statement} "}" ["senao" "{" {statement} "}"];
+
+while: "enquanto" "(" rel_exp ")" "{" {statement} "}";
+
+rel_exp: expression ("==" | ">" | "<") expression;
+
+expression: term { ("+" | "-" | "ou") term };
+
+term: factor { ("*" | "/" | "e") factor };
+
+factor: number | indentifier | ("+", | "-" | "inv") factor | "(" expression ")";
+
+indentifier = letter, { letter | digit | "_" };
+
+letter = "A" | "B" | "C" | "D" | "E" | "F" | "G"
        | "H" | "I" | "J" | "K" | "L" | "M" | "N"
        | "O" | "P" | "Q" | "R" | "S" | "T" | "U"
        | "V" | "W" | "X" | "Y" | "Z" ;
 
-digito = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+number: digit { digit };
 
-numero = digito, { digito };
-identificador = letra, { letra | digito };
-
-funcao = "definir", identificador, "(", ")", comandos;
-comandos = "{", { comando }, "}";
-comando = variavel | imprimir | condicional | enquanto | funcao | chama_funcao;
-chama_funcao = identificador, "(", {argumentos}, ")";
-argumentos = { numero | variavel };
-
-variavel = identificador , "=" , expressao;
-expressao = termo, { ( "+" | "-" ), termo };
-termo = fator, { ( "*" | "/" ), fator };
-fator = identificador | ( ( "+" | "-" ), fator ) | numero | ( "(", expressao, ")" );
-
-imprimir = "imprime", "(", expressao, ")";
-condicional = "se", "(", expressao_boleana, ")", comandos;
-loop = "enquanto", "(", expressao_boleana, ")", comandos;
-expressao_boleana = termo_boleana, { ( "ou" | "e" ), termo_boleana };
-termo_boleana = expressao, { ( "==" | "<" | ">" ), expressao }
+digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 ```
-
-#### Dúvidas:
-- Como implementar o EBNF do `else`.
