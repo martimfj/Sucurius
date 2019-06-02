@@ -1,0 +1,30 @@
+n = 20
+fizz = 0000
+buzz = 1111
+fizzbuzz = 00001111
+flag = 1
+
+enquanto(n > 0){
+    tres = (n - ((n / 3) * 3))
+    cinco = (n - ((n / 5) * 5))
+
+    imprime(n)
+
+    se((tres == 0) e (cinco == 0)){
+        imprime(fizzbuzz)
+        flag = 0
+    }
+
+    se((tres == 0) e (flag == 1)){
+        imprime(fizz)
+        flag = 0
+    }
+
+    se((cinco == 0) e (flag == 1)){
+        imprime(buzz)
+        flag = 0
+    }
+
+    flag = 1
+    n = n - 1
+}

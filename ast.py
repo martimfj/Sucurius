@@ -1,3 +1,5 @@
+from symbol_table import SymbolTable
+
 class Number():
     def __init__(self, value):
         self.value = value
@@ -46,7 +48,7 @@ class BinaryOp():
             return left or right
         
         else:
-            raise AssertionError('Oops, this should not be possible!')
+            raise ValueError("Error (BinaryOp): {} not supported".format(self.operator.gettokentype()))
 
 class UnaryOp():
     def __init__(self, operator, value):
@@ -60,7 +62,7 @@ class UnaryOp():
         elif self.operator.gettokentype() == "PLUS":
             return + self.value.eval(st)
 
-        elif self.operator.gettokentype() == "INV":
+        elif self.operator.gettokentype() == "NOT":
             return not self.value.eval(st)
 
 class Print():
@@ -117,4 +119,33 @@ class Assigment():
 
     def eval(self, st):
         st.setter(self.identifier, self.value.eval(st))
+
+class FuncDec():
+    def __init__(self, value, args, func_statements):
+        self.value = value
+        self.args = args
+        self.func_statements = func_statements
+
+    def eval(self, st):
+        st.setter(self.value, self)
+
+class FuncCall():
+    def __init__(self, value, args):
+        self.value = value
+        self.args = args
+
+    def eval(self, st):
+        new_st = SymbolTable(st)
+        decFunc = new_st.getter(self.value)
+
+        if len(decFunc.args) == len(self.args):
+            for decVar, callVar in zip(decFunc.args, self.args):
+                new_st.setter(decVar.getstr(), callVar.eval(new_st))
+        else:
+            raise ValueError("AST Error (FuncCall): Expected {} arguments. got {}".format(len(decFunc.args), len(self.args)))
+
+        decFunc.func_statements.eval(new_st)
+        return new_st.getter(decFunc.value)
+
         
+    

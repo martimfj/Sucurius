@@ -1,35 +1,33 @@
 from lexer import Lexer
 from parser import Parser
 from symbol_table import SymbolTable
+import re
+import sys
 
-string = """price1 = 154
-price2 = 352
-quantity = 6
-flag = 1
-se(price1 > price2){
-    savings = price1-price2
-    imprime(savings)
-}
-senao{
-    savings = (price2-price1)
-    imprime(savings)
-}
-enquanto(flag == 1){
-    se(quantity > 0){
-        imprime(savings * quantity)
-        quantity = quantity - 1
-    }
-    senao{
-        flag = flag + 2
-    }    
-}
-"""
+def main():
+    try:
+        filename = sys.argv[1]
+    except IndexError:
+        print("Este programa aceita um arquivo .su como entrada. Executando arquivo teste...")
+        filename = "test_file.su"
 
-lexer = Lexer().createLexer()
-tokens = lexer.lex(string)
+    with open (filename, 'r') as file:
+        raw_code = file.read()
+    
+    # Pre Processing
+    code = re.sub("^(\s*(\r\n|\n|\r))", '', re.sub("'.*\n", "\n", raw_code)) + "\n"
 
-st = SymbolTable()
-pg = Parser()
-pg.parse()
-parser = pg.get_parser()
-parser.parse(tokens).eval(st)
+    # Lexer
+    lexer = Lexer().createLexer()
+    tokens = lexer.lex(code)
+    
+    # Symbol Table
+    st = SymbolTable(None)
+
+    # Parser
+    parser = Parser()
+    parser.parse()
+    parser.get_parser().parse(tokens).eval(st)
+
+if __name__ == "__main__":
+    main()

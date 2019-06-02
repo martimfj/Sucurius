@@ -17,6 +17,8 @@ class Lexer():
 
         self.lexer.add('BIGGER', r'\>')
         self.lexer.add('SMALLER', r'\<')
+        # self.lexer.add('BIGGEREQ', r'\>=')
+        # self.lexer.add('SMALLEREQ', r'\<=')
         self.lexer.add('EQUAL', r'==')
         self.lexer.add('ASSINGMENT', r'=')
         self.lexer.add('DIFF', r'\!=')
